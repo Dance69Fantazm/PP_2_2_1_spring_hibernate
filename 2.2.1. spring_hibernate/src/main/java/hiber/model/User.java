@@ -1,6 +1,7 @@
 package hiber.model;
 
 import javax.persistence.*;
+import java.util.Objects;
 
 @Entity
 @Table(name = "users")
@@ -17,7 +18,7 @@ public class User {
     @Column(name = "last_name")
     private String lastName;
 
-    @Column(name = "email")
+    @Column(name = "email", unique = true)
     private String email;
 
     @OneToOne(cascade = CascadeType.ALL)
@@ -78,6 +79,23 @@ public class User {
 
     public void setCar(Car car) {
         this.car = car;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof User)) return false;
+        User user = (User) o;
+        return Objects.equals(id, user.id) &&
+                Objects.equals(email, user.email);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = 17;
+        result = 31 * result + (email != null ? email.hashCode() : 0);
+        result = 31 * result + (id != null ? id.hashCode() : 0);
+        return result;
     }
 
     @Override
